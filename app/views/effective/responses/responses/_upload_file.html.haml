@@ -1,0 +1,4 @@
+- if response.response&.attached?
+  = link_to(response.response.filename, url_for(response.response), target: '_blank')
+- else
+  = '-'

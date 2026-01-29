@@ -1,0 +1,17 @@
+- (question.question_options + [nil]).each do |question_option|
+  - selected = responses.select { |br| br.response.blank? } if question_option.blank?
+  - selected ||= responses.select { |br| Array(br.response).include?(question_option) }
+
+  - count = selected.length
+  - total = responses.length
+  - percent = (total.zero? ? 0 : ((count * 100.0) / total).round)
+
+  - next if question_option.blank? && count == 0
+
+  .questionable-result-option
+    .d-flex
+      .mr-auto= question_option.blank? ? 'None of the Above' : question_option
+      .text-muted #{count} (#{percent}%)
+
+    .progress.mb-3
+      .progress-bar{role: 'progressbar', 'aria-valuenow': count, 'aria-valuemin': 0, 'aria-valuemax': total, style: "width: #{percent}%"}

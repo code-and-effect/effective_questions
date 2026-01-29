@@ -1,0 +1,19 @@
+- raise("expected an acts_as_responsable resource") unless responsable.class.try(:acts_as_responsable?)
+- raise("expected an acts_as_questionable resource") unless questionable.class.try(:acts_as_questionable?)
+
+- questionable.questions.top_level.deep.each do |question|
+  - response = responsable.response(question: question)
+
+  = f.fields_for :responses, response do |fbr|
+    = render('/effective/responses/fields', f: fbr, question: question)
+
+    - question.follow_up_questions.each do |follow_up|
+      - response = responsable.response(question: follow_up)
+
+      = fbr.show_if(question.show_if_attribute, follow_up.show_if_value) do
+        = f.fields_for :responses, response do |fbr|
+          = render('/effective/responses/fields', f: fbr, question: follow_up)
+
+      = fbr.hide_if(question.show_if_attribute, follow_up.show_if_value) do
+        = f.fields_for :responses, response do |fbr|
+          = fbr.hidden_field :_destroy, value: true

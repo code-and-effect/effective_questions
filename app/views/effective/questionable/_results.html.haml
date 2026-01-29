@@ -1,0 +1,31 @@
+- # The grouped results for an entire questionable resource
+.questionable-results
+  %table.table.table-hover
+    %thead
+      %tr
+        %th Question
+        %th Results
+
+    %tbody
+      - questionable.questions.top_level.each_with_index do |question, index|
+        - responses = questionable.completed_responses(question: question)
+
+        %tr
+          %td
+            #{index + 1}. #{question}
+            %br
+            %small.text-muted= question.category
+
+          %td= render('effective/questionable/result', question: question, responses: responses)
+
+        - question.follow_up_questions.each_with_index do |follow_up_question, index|
+          - responses = questionable.completed_responses(question: follow_up_question)
+
+          %tr
+            %td
+              .ml-4
+                #{('a'.ord + index).chr}. #{follow_up_question}
+                %br
+                %small.text-muted= follow_up_question.category
+
+            %td= render('effective/questionable/result', question: follow_up_question, responses: responses)

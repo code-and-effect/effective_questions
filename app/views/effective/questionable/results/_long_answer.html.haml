@@ -1,0 +1,2 @@
+- responses.select { |br| br.long_answer.present? }.each do |response|
+  .questionable-result-long-answer= response.response

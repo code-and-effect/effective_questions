@@ -1,0 +1,23 @@
+- # The individiaual responses for one resonsable resource
+.responsable-results
+  %table.table.table-hover
+    %thead
+      %tr
+        %th Question
+        %th Response
+
+    %tbody
+      - questionable.questions.top_level.deep.each do |question|
+        - response = responsable.response(question: question)
+
+        %tr
+          %td= question
+          %td= render(response)
+
+        - question.follow_up_questions.deep.each do |follow_up_question|
+          - response = responsable.response(question: follow_up_question)
+
+          - if response.persisted?
+            %tr
+              %td= follow_up_question
+              %td= render(response)

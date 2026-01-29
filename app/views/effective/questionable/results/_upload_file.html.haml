@@ -1,0 +1,3 @@
+- responses.select { |br| br.response&.attached? }.each do |response|
+  .questionable-result-upload-file
+    = link_to(response.response.filename, url_for(response.response), target: '_blank')

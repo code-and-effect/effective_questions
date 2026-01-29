@@ -1,0 +1,11 @@
+en:
+  effective_questions:
+    name: 'Questions and Responses'
+    acronym: 'Questions'
+
+  activerecord:
+    models:
+      effective/question: 'Question'
+      effective/question_option: 'Question Option'
+      effective/response: 'Response'
+      effective/response_option: 'Response Option'

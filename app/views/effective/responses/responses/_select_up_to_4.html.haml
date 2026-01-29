@@ -1,0 +1,5 @@
+- response.response.each do |question_option|
+  %div= question_option.title
+
+- if response.response.blank?
+  = '-'

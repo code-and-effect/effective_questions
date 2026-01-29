@@ -1,0 +1,15 @@
+.row
+  .col
+    %h3= question
+    %p.text-muted.mb-2= question.category
+
+    - if question.body.present?
+      .mb-3= question.body
+
+    = f.hidden_field :questionable_type
+    = f.hidden_field :questionable_id
+    = f.hidden_field :question_id
+
+    - response = f.object
+    - partial = 'effective/responses/fields/' + question.category_partial
+    = render(partial, f: f, response: response, question: question)
