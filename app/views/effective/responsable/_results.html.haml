@@ -12,7 +12,7 @@
 
         %tr
           %td= question
-          %td= render(response)
+          %td= render('effective/responses/response', response: response)
 
         - question.follow_up_questions.deep.each do |follow_up_question|
           - response = responsable.response(question: follow_up_question)
@@ -20,4 +20,4 @@
           - if response.persisted?
             %tr
               %td= follow_up_question
-              %td= render(response)
+              %td= render('effective/responses/response', response: response)

@@ -1,0 +1,6 @@
+.effective-question
+  Question ##{question.position + 1}:
+  = question
+
+  - if question.body.present?
+    .mt-4= question.body.to_s
