@@ -1,0 +1,131 @@
+= f.show_if(:scored, true) do
+  = f.fields_for :question_answers, f.object.question_answer do |fa|
+    = card('Answer') do
+      %p The answer to this question is:
+
+      = f.show_if :category, 'Choose one' do
+        %ul
+          %li One correct answer option as selected above.
+
+      = f.show_if :category, 'Select up to 1' do
+        %ul
+          %li One correct answer option as selected above.
+
+      = f.show_if :category, 'Select up to 2' do
+        %ul
+          %li Two correct answer options as selected above.
+
+      = f.show_if :category, 'Select up to 3' do
+        %ul
+          %li Three correct answer options as selected above.
+
+      = f.show_if :category, 'Select up to 4' do
+        %ul
+          %li Four correct answer options as selected above.
+
+      = f.show_if :category, 'Select up to 5' do
+        %ul
+          %li Five correct answer options as selected above.
+
+      = f.show_if :category, 'Select all that apply' do
+        %ul
+          %li All correct answer options as selected above.
+
+      = f.show_if :category, 'Short Answer' do
+        - operations = fa.object.operations('Short Answer')
+        = fa.radios :operation, operations, buttons: true, label: false
+
+        = fa.show_if(:operation, 'Equal to') do
+          = fa.text_field :short_answer
+
+        = fa.show_if_any(:operation, operations - ['Equal to']) do
+          = fa.text_field :short_answer, label: 'Matched text', hint: 'Does not support wildcards'
+
+      = f.show_if :category, 'Long Answer' do
+        - operations = fa.object.operations('Long Answer')
+        = fa.radios :operation, operations, buttons: true, label: false
+
+        = fa.show_if(:operation, 'Equal to') do
+          = fa.text_field :long_answer
+
+        = fa.show_if_any(:operation, operations - ['Equal to']) do
+          = fa.text_field :long_answer, label: 'Matched text', hint: 'Does not support wildcards'
+
+      = f.show_if :category, 'Date' do
+        - operations = fa.object.operations('Date')
+
+        = fa.radios :operation, operations, buttons: true, label: false
+
+        = fa.show_if_any(:operation, operations - ['Within range']) do
+          .d-flex= fa.date_field :date
+
+        = fa.show_if(:operation, 'Within range') do
+          .d-flex.align-items-center
+            = fa.date_field :date_begin
+            %span.mx-4 to
+            = fa.date_field :date_end
+
+      = f.show_if :category, 'Decimal' do
+        - operations = fa.object.operations('Decimal')
+        = fa.radios :operation, operations, buttons: true, label: false
+
+        = fa.show_if_any(:operation, operations - ['Within range']) do
+          .d-flex= fa.float_field :decimal
+
+        = fa.show_if(:operation, 'Within range') do
+          .d-flex.align-items-center
+            = fa.float_field :decimal_begin
+            %span.mx-4 to
+            = fa.float_field :decimal_end
+
+      = f.show_if :category, 'Email' do
+        - operations = fa.object.operations('Email')
+        = fa.radios :operation, operations, buttons: true, label: false
+
+        = fa.show_if(:operation, 'Equal to') do
+          .d-flex= fa.email_field :email
+
+        = fa.show_if_any(:operation, operations - ['Equal to']) do
+          .d-flex= fa.text_field :email, label: 'Text to match'
+
+      = f.show_if :category, 'Number' do
+        - operations = fa.object.operations('Number')
+        = fa.radios :operation, operations, buttons: true, label: false
+
+        = fa.show_if_any(:operation, operations - ['Within range']) do
+          .d-flex= fa.number_field :number
+
+        = fa.show_if(:operation, 'Within range') do
+          .d-flex.align-items-center
+            = fa.number_field :number_begin
+            %span.mx-4 to
+            = fa.number_field :number_end
+
+      = f.show_if :category, 'Percentage' do
+        - operations = fa.object.operations('Percentage')
+        = fa.radios :operation, operations, buttons: true, label: false
+
+        = fa.show_if_any(:operation, operations - ['Within range']) do
+          .d-flex= fa.percent_field :percentage
+
+        = fa.show_if(:operation, 'Within range') do
+          .d-flex.align-items-center
+            = fa.percent_field :percentage_begin
+            %span.mx-4 to
+            = fa.percent_field :percentage_end
+
+      = f.show_if :category, 'Price' do
+        - operations = fa.object.operations('Price')
+        = fa.radios :operation, operations, buttons: true, label: false
+
+        = fa.show_if_any(:operation, operations - ['Within range']) do
+          .d-flex= fa.number_field :price
+
+        = fa.show_if(:operation, 'Within range') do
+          .d-flex.align-items-center
+            = fa.number_field :price_begin
+            %span.mx-4 to
+            = fa.number_field :price_end
+
+      = f.show_if :category, 'Upload File' do
+        %p Automatic scoring is not supported for this question type.

@@ -6,7 +6,7 @@ module Effective
       title         :text
       position      :integer
 
-      #correct       :boolean
+      answer :boolean
 
       timestamps
     end
