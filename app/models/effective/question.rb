@@ -24,8 +24,11 @@ module Effective
       'Select up to 4',
       'Select up to 5',
       'Date',         # Date Field
+      'Decimal',      # Decimal Field
       'Email',        # Email Field
       'Number',       # Numeric Field
+      'Percentage',   # Percentage Field
+      'Price',        # Price Field
       'Long Answer',  # Text Area
       'Short Answer', # Text Field
       'Upload File'   # File field
@@ -52,6 +55,8 @@ module Effective
 
       follow_up        :boolean
       follow_up_value  :string
+
+      #scored          :boolean
 
       timestamps
     end

@@ -12,8 +12,11 @@ module Effective
     effective_resource do
       # The response
       date            :date
+      decimal         :decimal
       email           :string
       number          :integer
+      percentage      :integer
+      price           :integer
       long_answer     :text
       short_answer    :text
 
@@ -27,6 +30,9 @@ module Effective
     end
 
     validates :date, presence: true, if: -> { question&.required? && question.date? }
+    validates :decimal, presence: true, if: -> { question&.required? && question.decimal? }
+    validates :percentage, presence: true, if: -> { question&.required? && question.percentage? }
+    validates :price, presence: true, if: -> { question&.required? && question.price? }
     validates :email, presence: true, email: true, if: -> { question&.required? && question.email? }
     validates :number, presence: true, if: -> { question&.required? && question.number? }
     validates :long_answer, presence: true, if: -> { question&.required? && question.long_answer? }
@@ -53,8 +59,7 @@ module Effective
       length: { maximum: 5, message: 'please select 5 options or fewer' }
 
     def to_s
-      #model_name.human
-      response.to_s
+      model_name.human || 'Response'
     end
 
     def response
@@ -63,6 +68,9 @@ module Effective
       return date if question.date?
       return email if question.email?
       return number if question.number?
+      return percentage if question.percentage?
+      return price if question.price?
+      return decimal if question.decimal?
       return long_answer if question.long_answer?
       return short_answer if question.short_answer?
       return upload_file if question.upload_file?
@@ -79,8 +87,7 @@ module Effective
     end
 
     def completed?
-      return false if responsable.blank?
-      responsable.completed?
+      responsable.try(:completed?) == true
     end
 
   end

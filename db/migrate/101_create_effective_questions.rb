@@ -44,6 +44,9 @@ class CreateEffectiveQuestions < ActiveRecord::Migration[6.0]
       t.integer :number
       t.text :long_answer
       t.text :short_answer
+      t.decimal :decimal
+      t.integer :percentage
+      t.integer :price
 
       t.datetime :updated_at
       t.datetime :created_at
