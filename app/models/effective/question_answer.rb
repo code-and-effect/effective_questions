@@ -185,10 +185,20 @@ module Effective
     private 
 
     def format_value(val)
-      return '""' if val.blank?
-      return val.to_s if val.is_a?(Numeric)
-      return val.strftime('%Y-%m-%d') if val.respond_to?(:strftime)
-      "\"#{val}\""
+      return '' if val.blank?
+
+      if question.price?
+       "$#{'%0.2f' % (val / 100.0)}"
+      elsif question.percentage?
+        precision = (val % 1000).zero? ? 0 : 3
+        "#{format("%.#{precision}f", val.to_f / 1000)}%"
+      elsif question.date?
+        val.strftime('%Y-%m-%d')
+      elsif val.is_a?(Numeric)
+        val.to_s
+      else
+        "\"#{val}\""
+      end
     end
   end
 end

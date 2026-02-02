@@ -119,13 +119,13 @@
         = fa.radios :operation, operations, buttons: true, label: false
 
         = fa.show_if_any(:operation, operations - ['Within range']) do
-          .d-flex= fa.number_field :price
+          .d-flex= fa.price_field :price
 
         = fa.show_if(:operation, 'Within range') do
           .d-flex.align-items-center
-            = fa.number_field :price_begin
+            = fa.price_field :price_begin
             %span.mx-4 to
-            = fa.number_field :price_end
+            = fa.price_field :price_end
 
       = f.show_if :category, 'Upload File' do
         %p Automatic scoring is not supported for this question type.
