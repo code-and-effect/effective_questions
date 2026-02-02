@@ -138,6 +138,26 @@ module Effective
       end
     end
 
+    def answer
+      return unless scored?
+      question_option? ? answer_options : question_answer.try(:answer)
+    end
+
+    def answer_to_s
+      return '' unless scored?
+
+      case category
+        when 'Choose one' then "One of: #{answer_options.join(', ')}"
+        when 'Select all that apply' then "All of: #{answer_options.join(', ')}"
+        when 'Select up to 1' then "One of: #{answer_options.join(', ')}"
+        when 'Select up to 2' then "Two of: #{answer_options.join(', ')}"
+        when 'Select up to 3' then "Three of: #{answer_options.join(', ')}"
+        when 'Select up to 4' then "Four of: #{answer_options.join(', ')}"
+        when 'Select up to 5' then "Five of: #{answer_options.join(', ')}"
+        else question_answer.try(:to_s)
+      end
+    end
+
     def show_if_value
       question.try(:question_option?) ? question_option_id : follow_up_value
     end

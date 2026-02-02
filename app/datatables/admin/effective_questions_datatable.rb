@@ -27,6 +27,9 @@ class Admin::EffectiveQuestionsDatatable < Effective::Datatable
       col :follow_up_questions, action: false, label: 'Follow up questions'
     end
 
+    col :scored
+    col :answer_to_s, label: 'Answer'
+
     actions_col
   end
 

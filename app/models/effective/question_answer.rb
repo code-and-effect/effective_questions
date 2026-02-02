@@ -81,7 +81,29 @@ module Effective
     end
 
     def to_s
-      model_name.human || 'Response'
+      return '' unless question.present?
+      return '-' unless operations(question.category).present?
+
+      case operation
+      when 'Equal to'
+        "Equal to #{format_value(answer)}"
+      when 'Within range'
+        "Between #{format_value(answer.begin)} and #{format_value(answer.end)}"
+      when 'Less than'
+        "Less than #{format_value(answer)}"
+      when 'Less than or equal to'
+        "Less than or equal to #{format_value(answer)}"
+      when 'Greater than'
+        "Greater than #{format_value(answer)}"
+      when 'Greater than or equal to'
+        "Greater than or equal to #{format_value(answer)}"
+      when 'Contains'
+        "Contains #{format_value(answer)}"
+      when 'Does not contain'
+        "Does not contain #{format_value(answer)}"
+      else
+        raise("unknown operation: #{operation}")
+      end
     end
 
     def operations(category)
@@ -105,6 +127,27 @@ module Effective
       else
         raise("unknown operations for category: #{category}")
       end
+    end
+
+    def answer
+      if operation == 'Within range'
+        return (date_begin..date_end) if question.date?
+        return (decimal_begin..decimal_end) if question.decimal?
+        return (number_begin..number_end) if question.number?
+        return (percentage_begin..percentage_end) if question.percentage?
+        return (price_begin..price_end) if question.price?
+      else
+        return date if question.date?
+        return decimal if question.decimal?
+        return email if question.email?
+        return number if question.number?
+        return percentage if question.percentage?
+        return price if question.price?
+        return long_answer if question.long_answer?
+        return short_answer if question.short_answer?
+      end
+
+      raise('unknown operation: #{operation}')
     end
 
     def equals?
@@ -139,5 +182,13 @@ module Effective
       operation == 'Greater than or equal to'
     end
 
+    private 
+
+    def format_value(val)
+      return '""' if val.blank?
+      return val.to_s if val.is_a?(Numeric)
+      return val.strftime('%Y-%m-%d') if val.respond_to?(:strftime)
+      "\"#{val}\""
+    end
   end
 end
