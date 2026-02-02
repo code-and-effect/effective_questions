@@ -6,6 +6,8 @@ module Effective
       title         :text
       position      :integer
 
+      answer :boolean
+
       timestamps
     end
 

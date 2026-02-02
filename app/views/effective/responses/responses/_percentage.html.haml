@@ -1,0 +1,5 @@
+- if response.response.present?
+  - precision = (response.response % 1000).zero? ? 0 : 3
+  = number_to_percentage(response.response / 1000.0, precision: precision)
+- else
+  = '-'

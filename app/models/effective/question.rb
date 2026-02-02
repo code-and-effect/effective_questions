@@ -4,11 +4,13 @@ module Effective
 
     belongs_to :question, optional: true # Present when I'm a follow up question
     belongs_to :question_option, optional: true # Might be present when I'm a follow up question
+    has_many :follow_up_questions, -> { order(:position) }, class_name: 'Effective::Question', foreign_key: :question_id, dependent: :destroy
 
     has_many :question_options, -> { order(:position) }, inverse_of: :question, dependent: :delete_all
-    accepts_nested_attributes_for :question_options, reject_if: :all_blank, allow_destroy: true
+    accepts_nested_attributes_for :question_options, reject_if: -> (atts) { atts['title'].blank? }, allow_destroy: true
 
-    has_many :follow_up_questions, -> { order(:position) }, class_name: 'Effective::Question', foreign_key: :question_id, dependent: :destroy
+    has_many :question_answers, dependent: :delete_all
+    accepts_nested_attributes_for :question_answers, reject_if: :all_blank, allow_destroy: true
 
     has_rich_text :body
     log_changes(to: :questionable) if respond_to?(:log_changes)
@@ -24,8 +26,11 @@ module Effective
       'Select up to 4',
       'Select up to 5',
       'Date',         # Date Field
+      'Decimal',      # Decimal Field
       'Email',        # Email Field
       'Number',       # Numeric Field
+      'Percentage',   # Percentage Field
+      'Price',        # Price Field
       'Long Answer',  # Text Area
       'Short Answer', # Text Field
       'Upload File'   # File field
@@ -52,6 +57,8 @@ module Effective
 
       follow_up        :boolean
       follow_up_value  :string
+
+      scored          :boolean
 
       timestamps
     end
@@ -81,6 +88,30 @@ module Effective
     validates :question_option, presence: true, if: -> { follow_up? && question.try(:question_option?) }
     validates :follow_up_value, presence: true, if: -> { follow_up? && !question.try(:question_option?) }
 
+    validates :scored, inclusion: { in: [false], message: 'is not supported' }, if: -> { category == 'Upload File' }
+
+    validates :question_answer, presence: true, if: -> { scored? }
+
+    validate(if: -> { scored? && (choose_one? || select_up_to_1? || select_all_that_apply?) }) do
+      errors.add(:base, 'must have at least one correct answer option') if answer_options.count < 1
+    end
+
+    validate(if: -> { scored? && select_up_to_2? }) do
+      errors.add(:base, 'must have two or more correct answer options') if answer_options.count < 2
+    end
+
+    validate(if: -> { scored? && select_up_to_3? }) do
+      errors.add(:base, 'must have three or more correct answer options') if answer_options.count < 3
+    end
+
+    validate(if: -> { scored? && select_up_to_4? }) do
+      errors.add(:base, 'must have four or more correct answer options') if answer_options.count < 4
+    end
+
+    validate(if: -> { scored? && select_up_to_5? }) do
+      errors.add(:base, 'must have five or more correct answer options') if answer_options.count < 5
+    end
+
     # Create choose_one? and select_all_that_apply? methods for each category
     CATEGORIES.each do |category|
       define_method(category.parameterize.underscore + '?') { self.category == category }
@@ -95,12 +126,35 @@ module Effective
 
       case category
       when 'Date' then :date
+      when 'Decimal' then :decimal
       when 'Email' then :email
       when 'Number' then :number
+      when 'Percentage' then :percentage
+      when 'Price' then :price
       when 'Long Answer' then :long_answer
       when 'Short Answer' then :short_answer
       when 'Upload File' then :upload_file
       else :unknown
+      end
+    end
+
+    def answer
+      return unless scored?
+      question_option? ? answer_options : question_answer.try(:answer)
+    end
+
+    def answer_to_s
+      return '' unless scored?
+
+      case category
+        when 'Choose one' then "One of: #{answer_options.join(', ')}"
+        when 'Select all that apply' then "All of: #{answer_options.join(', ')}"
+        when 'Select up to 1' then "One of: #{answer_options.join(', ')}"
+        when 'Select up to 2' then "Two of: #{answer_options.join(', ')}"
+        when 'Select up to 3' then "Three of: #{answer_options.join(', ')}"
+        when 'Select up to 4' then "Four of: #{answer_options.join(', ')}"
+        when 'Select up to 5' then "Five of: #{answer_options.join(', ')}"
+        else question_answer.try(:to_s)
       end
     end
 
@@ -116,8 +170,16 @@ module Effective
       WITH_OPTIONS_CATEGORIES.include?(category)
     end
 
+    def answer_options
+      question_options.reject(&:marked_for_destruction?).select(&:answer?)
+    end
+
     def category_partial
       category.to_s.parameterize.underscore
+    end
+
+    def question_answer
+      question_answers.first || question_answers.build()
     end
 
   end

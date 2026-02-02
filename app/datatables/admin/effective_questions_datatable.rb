@@ -12,7 +12,7 @@ class Admin::EffectiveQuestionsDatatable < Effective::Datatable
       col :questionable
     end
 
-    col :position, visible: false do |question|
+    col :position, visible: attributes[:follow_up].blank? do |question|
       question.position.to_i + 1
     end
 
@@ -26,6 +26,9 @@ class Admin::EffectiveQuestionsDatatable < Effective::Datatable
     unless attributes[:follow_up]
       col :follow_up_questions, action: false, label: 'Follow up questions'
     end
+
+    col :scored
+    col :answer_to_s, label: 'Answer'
 
     actions_col
   end

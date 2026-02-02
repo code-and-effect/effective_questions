@@ -28,94 +28,12 @@
     = f.rich_text_area :body, label: 'Body (optional)'
 
   = f.check_box :required, hint: 'A response to this question will be required'
+
   = f.select :category, Effective::Question::CATEGORIES
+  .mt-3= render('admin/questions/fields_category', f: f)
 
-  = f.show_if :category, 'Choose one' do
-    .mt-3.card
-      .card-body
-        %h5 Choose one
-        %p Display radio buttons to select one option
-
-  = f.show_if :category, 'Select all that apply' do
-    .card
-      .card-body
-        %h5 Select all that apply
-        %p Display checkboxes to select all options that apply
-
-  = f.show_if :category, 'Select up to 1' do
-    .card
-      .card-body
-        %h5 Select up to 1 (one)
-        %p Display checkboxes to select up to 1 option
-
-  = f.show_if :category, 'Select up to 2' do
-    .card
-      .card-body
-        %h5 Select up to 2 (two)
-        %p Display checkboxes to select up to 2 options
-
-  = f.show_if :category, 'Select up to 3' do
-    .card
-      .card-body
-        %h5 Select up to 3 (three)
-        %p Display checkboxes to select up to 3 options
-
-  = f.show_if :category, 'Select up to 4' do
-    .card
-      .card-body
-        %h5 Select up to 4 (four)
-        %p Display checkboxes to select up to 4 options
-
-  = f.show_if :category, 'Select up to 5' do
-    .card
-      .card-body
-        %h5 Select up to 5 (five)
-        %p Display checkboxes to select up to 5 options
-
-  = f.show_if :category, 'Short Answer' do
-    .card
-      .card-body
-        %h5 Short Answer
-        %p Display a text field to enter a short text answer
-
-  = f.show_if :category, 'Long Answer' do
-    .card
-      .card-body
-        %h5 Long Answer
-        %p Display a textarea to enter a long text answer
-
-  = f.show_if :category, 'Date' do
-    .card
-      .card-body
-        %h5 Date
-        %p Display a date field to enter a date
-
-  = f.show_if :category, 'Email' do
-    .card
-      .card-body
-        %h5 Email
-        %p Display an email field to enter an email
-
-  = f.show_if :category, 'Number' do
-    .card
-      .card-body
-        %h5 Number
-        %p Display a number field to enter an integer number
-
-  = f.show_if :category, 'Upload File' do
-    .card
-      .card-body
-        %h5 Upload File
-        %p Display a file field to upload a file
-
-  = f.show_if_any :category, Effective::Question::WITH_OPTIONS_CATEGORIES do
-    .mt-3.card
-      .card-body
-        %h5 Options
-        %p Display the following options:
-
-        = f.has_many :question_options, class: 'tight' do |fa|
-          = fa.text_field :title, label: false
+  = f.check_box :scored, hint: 'Any responses to this question will be automatically scored'
+  .mt-3= render('admin/questions/fields_scored', f: f)
 
   = effective_submit(f)
 

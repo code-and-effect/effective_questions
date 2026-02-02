@@ -1,0 +1,76 @@
+= f.show_if :category, 'Choose one' do
+  = card('Choose one') do
+    %p Display radio buttons to select one option
+
+= f.show_if :category, 'Select all that apply' do
+  = card('Select all that apply') do
+    %p Display checkboxes to select all options that apply
+
+= f.show_if :category, 'Select up to 1' do
+  = card('Select up to 1 (one)') do
+    %p Display checkboxes to select up to 1 option
+
+= f.show_if :category, 'Select up to 2' do
+  = card('Select up to 2 (two)') do
+    %p Display checkboxes to select up to 2 options
+
+= f.show_if :category, 'Select up to 3' do
+  = card('Select up to 3 (three)') do
+    %p Display checkboxes to select up to 3 options
+
+= f.show_if :category, 'Select up to 4' do
+  = card('Select up to 4 (four)') do
+    %p Display checkboxes to select up to 4 options
+
+= f.show_if :category, 'Select up to 5' do
+  = card('Select up to 5 (five)') do
+    %p Display checkboxes to select up to 5 options
+
+= f.show_if :category, 'Short Answer' do
+  = card('Short Answer') do
+    %p Display a text field to enter a short text answer
+
+= f.show_if :category, 'Long Answer' do
+  = card('Long Answer') do
+    %p Display a textarea to enter a long text answer
+
+= f.show_if :category, 'Date' do
+  = card('Date') do
+    %p Display a date field to enter a date
+
+= f.show_if :category, 'Decimal' do
+  = card('Decimal') do
+    %p Display a decimal field to enter a decimal number
+
+= f.show_if :category, 'Email' do
+  = card('Email') do
+    %p Display an email field to enter an email
+
+= f.show_if :category, 'Number' do
+  = card('Number') do
+    %p Display a number field to enter an integer number
+
+= f.show_if :category, 'Percentage' do
+  = card('Percentage') do
+    %p Display a percentage field to enter a percentage
+
+= f.show_if :category, 'Price' do
+  = card('Price') do
+    %p Display a price field to enter a price
+
+= f.show_if :category, 'Upload File' do
+  = card('Upload File') do
+    %p Display a file field to upload a file
+
+= f.show_if_any :category, Effective::Question::WITH_OPTIONS_CATEGORIES do
+  .mt-3
+  = card do
+    %h5 Options
+    %p Display the following options:
+
+    = f.has_many :question_options, class: 'tight' do |fa|
+      .row
+        .col= fa.text_field :title, label: false
+        = f.show_if(:scored, true) do
+          .col.mr-3= fa.check_box :answer, label: "Correct answer"
+
