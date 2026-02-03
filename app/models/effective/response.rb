@@ -59,7 +59,24 @@ module Effective
       length: { maximum: 5, message: 'please select 5 options or fewer' }
 
     def to_s
-      model_name.human || 'Response'
+      return '' unless question.present?
+      return '' unless response.present?
+
+      case question.category
+      when 'Date'
+        response.strftime('%Y-%m-%d')
+      when 'Price'
+        "$#{'%0.2f' % (response / 100.0)}"
+      when 'Percentage'
+        precision = (response % 1000).zero? ? 0 : 3
+        "#{format("%.#{precision}f", response.to_f / 1000)}%"
+      when 'Upload File'
+        response.filename.to_s
+      when 'Select all that apply', 'Select up to 2', 'Select up to 3', 'Select up to 4', 'Select up to 5'
+        Array(response).map(&:to_s).join(', ')
+      else
+        response.to_s
+      end
     end
 
     def response
@@ -96,14 +113,14 @@ module Effective
 
       if question.question_option?
         # For option-based questions, check if selected options match answer options
-        answer_option_ids = question.answer.map(&:id)
-        selected_option_ids = response_options.map(&:question_option_id)
+        answers = question.answer.map(&:id)
+        selected = Array(response).map(&:question_option_id)
 
         if question.select_all_that_apply?
-          return selected_option_ids.sort == answer_option_ids.sort
+          return selected.sort == answers.sort
         else
           # For choose_one or select_up_to_X, all selected must be correct
-          return selected_option_ids.present? && (selected_option_ids - answer_option_ids).blank?
+          return selected.present? && (selected - answers).blank?
         end
       end
 

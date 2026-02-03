@@ -60,6 +60,9 @@ module Effective
 
       scored          :boolean
 
+      task            :string
+      points          :decimal
+
       timestamps
     end
 

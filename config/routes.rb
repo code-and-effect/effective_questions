@@ -8,6 +8,7 @@ EffectiveQuestions::Engine.routes.draw do
 
   namespace :admin do
     resources :questions, except: [:show]
+    resources :responses, only: [:index]
   end
 
 end
