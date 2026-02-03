@@ -1,10 +1,14 @@
 - # The individiaual responses for one responsable resource
 .responsable-results
+  - scored = questionable.questionable_scored? && responsable.responsable_completed?
+
   %table.table.table-hover
     %thead
       %tr
         %th Question
         %th Response
+        - if scored
+          %th Result
 
     %tbody
       - questionable.questions.top_level.deep.each do |question|
@@ -14,6 +18,14 @@
           %td= question
           %td= render('effective/responses/response', response: response)
 
+          - if scored
+            %td
+              %span{title: "Correct answer was #{question.answer_to_s}"}
+                - if response.correct? 
+                  = badge('Correct', 'badge-success') 
+                - else 
+                  = badge('Incorrect', 'badge-danger')
+
         - question.follow_up_questions.deep.each do |follow_up_question|
           - response = responsable.response(question: follow_up_question)
 
@@ -21,3 +33,10 @@
             %tr
               %td= follow_up_question
               %td= render('effective/responses/response', response: response)
+              - if scored
+                %td
+                  %span{title: "Correct answer was #{follow_up_question.answer_to_s}"}
+                    - if response.correct? 
+                      = badge('Correct', 'badge-success') 
+                    - else 
+                      = badge('Incorrect', 'badge-danger')

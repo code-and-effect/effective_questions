@@ -147,11 +147,11 @@ module Effective
         return short_answer if question.short_answer?
       end
 
-      raise('unknown operation: #{operation}')
+      raise("unknown operation: #{operation}")
     end
 
     def equals?
-      operation == 'Equals'
+      operation == 'Equal to'
     end
 
     def contains?
@@ -163,7 +163,7 @@ module Effective
     end
 
     def within_range?
-      operation == 'Within Range'
+      operation == 'Within range'
     end
 
     def lt?

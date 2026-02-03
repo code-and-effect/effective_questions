@@ -27,4 +27,8 @@ module ActsAsResponsable
     response ||= responses.build(questionable: question.questionable, question: question)
   end
 
+  def responsable_completed?
+    try(:done?) == true || try(:completed?) == true
+  end
+
 end

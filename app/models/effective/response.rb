@@ -75,9 +75,9 @@ module Effective
       return short_answer if question.short_answer?
       return upload_file if question.upload_file?
 
-      return question_options.first if question.choose_one?
-      return question_options.first if question.select_up_to_1?
-      return question_options if question.question_option?
+      return response_options.first if question.choose_one?
+      return response_options.first if question.select_up_to_1?
+      return response_options if question.question_option?
 
       raise('unknown response for unexpected question category')
     end
@@ -87,7 +87,54 @@ module Effective
     end
 
     def completed?
-      responsable.try(:completed?) == true
+      responsable.responsable_completed?
+    end
+
+    def correct?
+      return unless question.present? && question.scored?
+      return false unless response.present?
+
+      if question.question_option?
+        # For option-based questions, check if selected options match answer options
+        answer_option_ids = question.answer.map(&:id)
+        selected_option_ids = response_options.map(&:question_option_id)
+
+        if question.select_all_that_apply?
+          return selected_option_ids.sort == answer_option_ids.sort
+        else
+          # For choose_one or select_up_to_X, all selected must be correct
+          return selected_option_ids.present? && (selected_option_ids - answer_option_ids).blank?
+        end
+      end
+
+      # For non-option questions, check against question_answer
+      answer = question.question_answer
+      return false unless answer.present?
+
+      case answer.operation
+      when 'Equal to'
+        if response.is_a?(String) && answer.answer.is_a?(String)
+          response.downcase.strip == answer.answer.downcase.strip
+        else
+          response == answer.answer
+        end
+      when 'Within range'
+        answer.answer.cover?(response)
+      when 'Less than'
+        response < answer.answer
+      when 'Less than or equal to'
+        response <= answer.answer
+      when 'Greater than'
+        response > answer.answer
+      when 'Greater than or equal to'
+        response >= answer.answer
+      when 'Contains'
+        response.to_s.downcase.include?(answer.answer.to_s.downcase)
+      when 'Does not contain'
+        !response.to_s.downcase.include?(answer.answer.to_s.downcase)
+      else
+        false
+      end
     end
 
   end

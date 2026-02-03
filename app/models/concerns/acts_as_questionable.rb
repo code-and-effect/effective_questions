@@ -27,4 +27,8 @@ module ActsAsQuestionable
     responses.select { |response| response.completed? && response.question_id == question.id }
   end
 
+  def questionable_scored?
+    questions.any?(&:scored?)
+  end
+
 end

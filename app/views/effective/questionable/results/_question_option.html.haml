@@ -1,6 +1,6 @@
 - (question.question_options + [nil]).each do |question_option|
   - selected = responses.select { |br| br.response.blank? } if question_option.blank?
-  - selected ||= responses.select { |br| Array(br.response).include?(question_option) }
+  - selected ||= responses.select { |br| Array(br.response).any? { |ro| ro.question_option == question_option } }
 
   - count = selected.length
   - total = responses.length
