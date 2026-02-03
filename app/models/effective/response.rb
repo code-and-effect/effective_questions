@@ -59,7 +59,24 @@ module Effective
       length: { maximum: 5, message: 'please select 5 options or fewer' }
 
     def to_s
-      model_name.human || 'Response'
+      return '' unless question.present?
+      return '' unless response.present?
+
+      case question.category
+      when 'Date'
+        response.strftime('%Y-%m-%d')
+      when 'Price'
+        "$#{'%0.2f' % (response / 100.0)}"
+      when 'Percentage'
+        precision = (response % 1000).zero? ? 0 : 3
+        "#{format("%.#{precision}f", response.to_f / 1000)}%"
+      when 'Upload File'
+        response.filename.to_s
+      when 'Select all that apply', 'Select up to 2', 'Select up to 3', 'Select up to 4', 'Select up to 5'
+        Array(response).map(&:to_s).join(', ')
+      else
+        response.to_s
+      end
     end
 
     def response

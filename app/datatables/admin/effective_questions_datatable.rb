@@ -17,7 +17,9 @@ class Admin::EffectiveQuestionsDatatable < Effective::Datatable
     end
 
     col :title
-    col :body, as: :text, visible: !attributes[:follow_up]
+    col :task
+    col :points
+    col :body, as: :text, visible: false
     col :required
 
     col :category, label: 'Type'
@@ -29,9 +31,6 @@ class Admin::EffectiveQuestionsDatatable < Effective::Datatable
 
     col :scored
     col :answer_to_s, label: 'Answer'
-
-    col :task
-    col :points
 
     actions_col
   end
