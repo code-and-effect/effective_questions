@@ -33,4 +33,17 @@ class SelectAllThatApplyTest < ActiveSupport::TestCase
     response.response_options.build(question_option: incorrect_option)
     refute response.correct?
   end
+
+  test 'question answer_to_s for select all that apply' do
+    question = build_question(questionable, 'Select all that apply', scored: true)
+
+    # Mark the first two options as correct answers
+    correct_option_a = question.question_options.first
+    correct_option_a.update!(answer: true)
+
+    correct_option_b = question.question_options.second
+    correct_option_b.update!(answer: true)
+
+    assert_equal "All of: #{correct_option_a}, #{correct_option_b}", question.answer_to_s
+  end
 end
