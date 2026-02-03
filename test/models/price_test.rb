@@ -87,4 +87,28 @@ class PriceTest < ActiveSupport::TestCase
     response.assign_attributes(price: value - 100)
     refute response.correct?
   end
+
+  test 'question_answer to_s for price' do
+    value = 1999 # $19.99
+
+    question = build_question(questionable, 'Price', scored: true)
+
+    answer = question.question_answers.build(operation: 'Equal to', price: value)
+    assert_equal 'Equal to $19.99', answer.to_s
+
+    answer.assign_attributes(operation: 'Less than', price: value)
+    assert_equal 'Less than $19.99', answer.to_s
+
+    answer.assign_attributes(operation: 'Less than or equal to', price: value)
+    assert_equal 'Less than or equal to $19.99', answer.to_s
+
+    answer.assign_attributes(operation: 'Greater than', price: value)
+    assert_equal 'Greater than $19.99', answer.to_s
+
+    answer.assign_attributes(operation: 'Greater than or equal to', price: value)
+    assert_equal 'Greater than or equal to $19.99', answer.to_s
+
+    answer.assign_attributes(operation: 'Within range', price: nil, price_begin: 1000, price_end: 5000)
+    assert_equal 'Between $10.00 and $50.00', answer.to_s
+  end
 end

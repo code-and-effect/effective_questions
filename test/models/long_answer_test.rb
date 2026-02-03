@@ -45,4 +45,17 @@ class LongAnswerTest < ActiveSupport::TestCase
     response.assign_attributes(long_answer: 'This answer has the forbidden word.')
     refute response.correct?
   end
+
+  test 'question_answer to_s for long answer' do
+    question = build_question(questionable, 'Long Answer', scored: true)
+
+    answer = question.question_answers.build(operation: 'Equal to', long_answer: 'expected answer')
+    assert_equal 'Equal to "expected answer"', answer.to_s
+
+    answer.assign_attributes(operation: 'Contains', long_answer: 'keyword')
+    assert_equal 'Contains "keyword"', answer.to_s
+
+    answer.assign_attributes(operation: 'Does not contain', long_answer: 'forbidden')
+    assert_equal 'Does not contain "forbidden"', answer.to_s
+  end
 end

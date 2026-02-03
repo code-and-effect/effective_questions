@@ -87,4 +87,28 @@ class NumberTest < ActiveSupport::TestCase
     response.assign_attributes(number: value - 1)
     refute response.correct?
   end
+
+  test 'question_answer to_s for number' do
+    value = 42
+
+    question = build_question(questionable, 'Number', scored: true)
+
+    answer = question.question_answers.build(operation: 'Equal to', number: value)
+    assert_equal 'Equal to 42', answer.to_s
+
+    answer.assign_attributes(operation: 'Less than', number: value)
+    assert_equal 'Less than 42', answer.to_s
+
+    answer.assign_attributes(operation: 'Less than or equal to', number: value)
+    assert_equal 'Less than or equal to 42', answer.to_s
+
+    answer.assign_attributes(operation: 'Greater than', number: value)
+    assert_equal 'Greater than 42', answer.to_s
+
+    answer.assign_attributes(operation: 'Greater than or equal to', number: value)
+    assert_equal 'Greater than or equal to 42', answer.to_s
+
+    answer.assign_attributes(operation: 'Within range', number: nil, number_begin: 10, number_end: 50)
+    assert_equal 'Between 10 and 50', answer.to_s
+  end
 end

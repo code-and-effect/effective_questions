@@ -45,4 +45,17 @@ class EmailTest < ActiveSupport::TestCase
     response.assign_attributes(email: 'test@spam.com')
     refute response.correct?
   end
+
+  test 'question_answer to_s for email' do
+    question = build_question(questionable, 'Email', scored: true)
+
+    answer = question.question_answers.build(operation: 'Equal to', email: 'test@example.com')
+    assert_equal 'Equal to "test@example.com"', answer.to_s
+
+    answer.assign_attributes(operation: 'Contains', email: 'example.com')
+    assert_equal 'Contains "example.com"', answer.to_s
+
+    answer.assign_attributes(operation: 'Does not contain', email: 'spam.com')
+    assert_equal 'Does not contain "spam.com"', answer.to_s
+  end
 end

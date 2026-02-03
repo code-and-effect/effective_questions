@@ -45,4 +45,17 @@ class ShortAnswerTest < ActiveSupport::TestCase
     response.assign_attributes(short_answer: 'bad')
     refute response.correct?
   end
+
+  test 'question_answer to_s for short answer' do
+    question = build_question(questionable, 'Short Answer', scored: true)
+
+    answer = question.question_answers.build(operation: 'Equal to', short_answer: 'correct')
+    assert_equal 'Equal to "correct"', answer.to_s
+
+    answer.assign_attributes(operation: 'Contains', short_answer: 'key')
+    assert_equal 'Contains "key"', answer.to_s
+
+    answer.assign_attributes(operation: 'Does not contain', short_answer: 'bad')
+    assert_equal 'Does not contain "bad"', answer.to_s
+  end
 end
