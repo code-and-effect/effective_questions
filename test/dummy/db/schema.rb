@@ -109,6 +109,8 @@ ActiveRecord::Schema.define(version: 101) do
     t.integer "question_id"
     t.integer "question_option_id"
     t.boolean "scored", default: false
+    t.string "task"
+    t.decimal "points"
     t.datetime "updated_at"
     t.datetime "created_at"
   end

@@ -30,6 +30,9 @@ class Admin::EffectiveQuestionsDatatable < Effective::Datatable
     col :scored
     col :answer_to_s, label: 'Answer'
 
+    col :task
+    col :points
+
     actions_col
   end
 

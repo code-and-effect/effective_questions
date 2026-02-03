@@ -18,6 +18,9 @@ class CreateEffectiveQuestions < ActiveRecord::Migration[6.0]
 
       t.boolean :scored, default: false
 
+      t.string :task
+      t.decimal :points
+
       t.datetime :updated_at
       t.datetime :created_at
     end

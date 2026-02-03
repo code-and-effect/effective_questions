@@ -31,4 +31,14 @@ module ActsAsResponsable
     try(:done?) == true || try(:completed?) == true
   end
 
+  def scored_responses
+    responses.select { |r| r.question&.scored? }
+  end
+
+  def responsable_score
+    scored = scored_responses()
+    return 0 unless scored.present?
+
+    ((scored.count(&:correct?).to_f / scored.length) * 100_000).round
+  end
 end

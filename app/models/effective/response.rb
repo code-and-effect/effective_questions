@@ -96,14 +96,14 @@ module Effective
 
       if question.question_option?
         # For option-based questions, check if selected options match answer options
-        answer_option_ids = question.answer.map(&:id)
-        selected_option_ids = response_options.map(&:question_option_id)
+        answers = question.answer.map(&:id)
+        selected = Array(response).map(&:question_option_id)
 
         if question.select_all_that_apply?
-          return selected_option_ids.sort == answer_option_ids.sort
+          return selected.sort == answers.sort
         else
           # For choose_one or select_up_to_X, all selected must be correct
-          return selected_option_ids.present? && (selected_option_ids - answer_option_ids).blank?
+          return selected.present? && (selected - answers).blank?
         end
       end
 

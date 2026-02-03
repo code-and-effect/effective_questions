@@ -21,6 +21,9 @@
           = f.text_field :follow_up_value, label: 'Answer required to display this question', required: true, hint: 'Enter the exact answer value that should trigger this question to appear'
 
   = f.text_field :title, label: 'Question Title'
+  .row
+    .col= f.text_field :task, hint: 'An optional task name or number used in exports'
+    .col= f.number_field :points, hint: 'An optional number of points awarded for this question'
 
   - if defined?(EffectiveArticleEditor)
     = f.article_editor :body, label: 'Body (optional)'

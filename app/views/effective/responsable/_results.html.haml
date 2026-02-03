@@ -1,13 +1,13 @@
 - # The individiaual responses for one responsable resource
-.responsable-results
-  - scored = questionable.questionable_scored? && responsable.responsable_completed?
+- include_scores = (local_assigns[:include_scores] == true)
 
+.responsable-results
   %table.table.table-hover
     %thead
       %tr
         %th Question
         %th Response
-        - if scored
+        - if include_scores
           %th Result
 
     %tbody
@@ -18,13 +18,16 @@
           %td= question
           %td= render('effective/responses/response', response: response)
 
-          - if scored
+          - if include_scores
             %td
-              %span{title: "Correct answer was #{question.answer_to_s}"}
-                - if response.correct? 
-                  = badge('Correct', 'badge-success') 
-                - else 
-                  = badge('Incorrect', 'badge-danger')
+              - if question.scored?
+                %span{title: "Correct answer was #{question.answer_to_s}"}
+                  - if response.correct? 
+                    = badge('Correct', 'badge-success') 
+                  - else 
+                    = badge('Incorrect', 'badge-danger')
+              - else
+                = '-'
 
         - question.follow_up_questions.deep.each do |follow_up_question|
           - response = responsable.response(question: follow_up_question)
@@ -33,10 +36,14 @@
             %tr
               %td= follow_up_question
               %td= render('effective/responses/response', response: response)
-              - if scored
+
+              - if include_scores
                 %td
-                  %span{title: "Correct answer was #{follow_up_question.answer_to_s}"}
-                    - if response.correct? 
-                      = badge('Correct', 'badge-success') 
-                    - else 
-                      = badge('Incorrect', 'badge-danger')
+                  - if follow_up_question.scored?
+                    %span{title: "Correct answer was #{follow_up_question.answer_to_s}"}
+                      - if response.correct? 
+                        = badge('Correct', 'badge-success') 
+                      - else 
+                        = badge('Incorrect', 'badge-danger')
+                  - else
+                    = '-'
