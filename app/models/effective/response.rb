@@ -75,9 +75,9 @@ module Effective
       return short_answer if question.short_answer?
       return upload_file if question.upload_file?
 
-      return question_options.first if question.choose_one?
-      return question_options.first if question.select_up_to_1?
-      return question_options if question.question_option?
+      return response_options.first if question.choose_one?
+      return response_options.first if question.select_up_to_1?
+      return response_options if question.question_option?
 
       raise('unknown response for unexpected question category')
     end
