@@ -21,6 +21,7 @@ end
 require 'support/effective_questions_test_builder'
 require 'support/effective_questions_test_helper'
 require 'pry-byebug'
+require "minitest/spec"
 
 class ActiveSupport::TestCase
   include Warden::Test::Helpers
@@ -29,6 +30,9 @@ class ActiveSupport::TestCase
 
   include EffectiveQuestionsTestBuilder
   include EffectiveQuestionsTestHelper
+
+  # Enable let() syntax from minitest-spec
+  extend Minitest::Spec::DSL
 end
 
 # Load the seeds

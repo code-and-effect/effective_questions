@@ -1,17 +1,15 @@
 module EffectiveQuestionsTestBuilder
 
-  def build_question(questionable, category)
-    questions = Array(category).map.with_index do |category, index|
-      question = questionable.questions.build(title: "#{category} Question ##{index+1}", category: category, required: false)
+  def build_question(questionable, category, scored: false)
+    question = questionable.questions.build(title: "#{category} Question", category: category, required: false, scored: scored)
 
-      if question.question_option?
-        question.question_options.build(title: 'Option A')
-        question.question_options.build(title: 'Option B')
-        question.question_options.build(title: 'Option C')
-      end
+    if question.question_option?
+      question.question_options.build(title: 'Option A')
+      question.question_options.build(title: 'Option B')
+      question.question_options.build(title: 'Option C')
     end
 
-    questions.length == 1 ? questions.first : questions
+    question
   end
 
   def create_user!
