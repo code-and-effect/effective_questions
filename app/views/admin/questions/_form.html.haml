@@ -23,7 +23,7 @@
   = f.text_field :title, label: 'Question Title'
   .row
     .col= f.text_field :task, hint: 'An optional task name or number used in exports'
-    .col= f.number_field :points, hint: 'An optional number of points awarded for this question'
+    .col= f.float_field :points, hint: 'An optional number of points awarded for this question'
 
   - if defined?(EffectiveArticleEditor)
     = f.article_editor :body, label: 'Body (optional)'
