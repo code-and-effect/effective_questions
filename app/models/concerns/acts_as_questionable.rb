@@ -23,8 +23,12 @@ module ActsAsQuestionable
   end
 
   def completed_responses(question: nil)
-    return responses.select(&:completed?) if question.nil?
-    responses.select { |response| response.completed? && response.question_id == question.id }
+    @_acts_as_questionable_responses ||= responses
+      .includes(:question, :responsable, :question_options, response_options: :question_option)
+      .select(&:completed?)
+
+    return @_acts_as_questionable_responses if question.blank?
+    @_acts_as_questionable_responses.select { |response| response.question_id == question.id }
   end
 
   def questionable_scored?

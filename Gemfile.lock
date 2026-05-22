@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    effective_questions (0.0.5)
+    effective_questions (0.0.6)
       effective_bootstrap
       effective_datatables (>= 4.0.0)
       effective_resources
@@ -375,7 +375,6 @@ DEPENDENCIES
   effective_test_bot
   haml-rails
   pry-byebug
-  psych
   sqlite3
   wicked
 
