@@ -9,6 +9,8 @@ module Effective
 
     has_one_attached :upload_file
 
+    log_changes(to: :responsable) if respond_to?(:log_changes)
+
     effective_resource do
       # The response
       date            :date
@@ -101,6 +103,12 @@ module Effective
 
     def category_partial
       question&.category_partial
+    end
+
+    def log_changes?
+      return responsable.log_changes? if responsable.respond_to?(:log_changes?)
+
+      true
     end
 
     def completed?
